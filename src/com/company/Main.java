@@ -17,6 +17,7 @@ public class Main {
 
         System.out.println("Equal: "+ planner.equal());
         System.out.println("Proportional: "+ planner.proportional());
+        System.out.println("Site Faults: "+ planner.pageFault());
 
     }
 }

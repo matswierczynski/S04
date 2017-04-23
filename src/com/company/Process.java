@@ -40,14 +40,19 @@ public class Process {
     }
 
     public void increaseFrames(){
+        int [] tmpQueue = new int[frames+1];
+        System.arraycopy(queue,0,tmpQueue,0,frames);
+        queue = tmpQueue;
         frames++;
-        queue = new int[frames];
     }
 
-    public void decreaseFrames(){
-        if (frames>=2)
+    public boolean decreaseFrames(){
+        if (frames>=2) {
             frames--;
-        queue = new int[frames];
+            System.arraycopy(queue, 0, queue, 0, frames);
+            return true;
+        }
+        return false;
     }
 
     public void setFrames(int size){frames=size;

@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 /**
  * Created by Mati on 2017-04-22.
  */
@@ -39,7 +41,7 @@ public class Planner {
             float newFramesSize=(((float)proc[i].getQueueSize()/(float)virtualMemSize)*availableFrames);
             int FramesSize = Math.round(newFramesSize);
             if (FramesSize<1)
-                    FramesSize=1;
+                FramesSize=1;
             proc[i].setFrames(FramesSize);
         }
         int siteError=0;
@@ -48,6 +50,62 @@ public class Planner {
                 siteError += proc[i].handle();
         }
         return siteError;
+    }
+
+    public int pageFault () {
+        Process proc[] = new Process[10];
+        int virtualMemSize = 0;
+        for (int i = 0; i < proc.length; i++)
+            proc[i] = new Process(processes.getProc()[i]); //kopia procesów
+        for (int i = 0; i < proc.length; i++)
+            virtualMemSize += proc[i].getQueueSize();
+        for (int i = 0; i < proc.length; i++) {
+            float newFramesSize = (((float) proc[i].getQueueSize() / (float) virtualMemSize) * availableFrames);
+            int FramesSize = Math.round(newFramesSize);
+            if (FramesSize < 1)
+                FramesSize = 1;
+            proc[i].setFrames(FramesSize);
+        }
+        int[] siteFaults = new int[proc.length];
+        int siteError = 0;
+        while (!isDone(proc)) { //wykonanie procesów do końca
+            for (int i = 0; i < proc.length; i++) {
+                siteFaults[i] = proc[i].handle();
+                siteError += siteFaults[i];
+            }
+                manageFrames(siteFaults, proc);
+            }
+
+        return siteError;
+    }
+
+    private void manageFrames(int [] siteFaults, Process [] proc){
+        int [] toSort = new int[siteFaults.length];
+        System.arraycopy(siteFaults,0,toSort,0,siteFaults.length);
+        Arrays.sort(toSort);
+
+        boolean trimmed = false;
+        int i=0;
+        int index=0;
+        while (!trimmed && i<siteFaults.length){
+            for (int k=0;k<siteFaults.length;k++) {
+                if (siteFaults[k] == toSort[i]) {
+                    index = k;
+                }
+            }
+            trimmed=proc[index].decreaseFrames();
+            i++;
+        }
+
+        if (trimmed){
+            for (int k=0;k<siteFaults.length;k++) {
+                if (siteFaults[k] == toSort[toSort.length-1]) {
+                    index = k;
+                }
+            }
+            proc[index].increaseFrames();
+        }
+
     }
 
     public boolean isDone(Process [] array){
