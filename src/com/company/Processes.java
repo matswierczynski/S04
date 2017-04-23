@@ -25,5 +25,12 @@ public class Processes {
         return proc;
     }
 
+    public int getAllPagesSize() {
+        int _size = 0;
+        for (int i = 0; i < proc.length; i++)
+            _size += proc[i].getQueueSize();
+        return _size;
+    }
+
 
 }

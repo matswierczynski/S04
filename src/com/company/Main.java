@@ -15,7 +15,8 @@ public class Main {
 
         Planner planner = new Planner(range, frames);
 
-        System.out.println("Process: "+ planner.equal());
+        System.out.println("Equal: "+ planner.equal());
+        System.out.println("Proportional: "+ planner.proportional());
 
     }
 }

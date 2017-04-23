@@ -8,6 +8,7 @@ public class Process {
     private Page[] _queueList=null;
     private Page[] _list=null;
     private int actualState;
+    private int[] queue;
 
     public Process(int availableFrames, Page[] listQueue, Page[] list){
         if(availableFrames>0) {
@@ -15,7 +16,16 @@ public class Process {
             _list=list;
             _queueList=listQueue;
             actualState=0;
+            queue = new int[frames];
         }
+    }
+
+    public Process(Process proc){
+            this.frames=proc.frames;
+            this._list=proc._list;
+            this._queueList=proc._queueList;
+            this.actualState=proc.actualState;
+            this.queue = new int[proc.frames];
     }
 
     private  void clear(){
@@ -25,18 +35,28 @@ public class Process {
         }
     }
 
+    public int getQueueSize(){
+        return _queueList.length;
+    }
+
     public void increaseFrames(){
         frames++;
+        queue = new int[frames];
     }
 
     public void decreaseFrames(){
         if (frames>=2)
             frames--;
+        queue = new int[frames];
     }
+
+    public void setFrames(int size){frames=size;
+        queue = new int[frames];}
 
     public boolean isExecuted(){
         return actualState>=_queueList.length;
     }
+
 
     public int handle(){
         clear();
@@ -45,7 +65,7 @@ public class Process {
         int loadpagecounter=0;
         int framenr=0;
         int runtime=0;
-        int[] queue = new int[frames];
+
         while (actualState <_queueList.length && runtime<100){
             runtime++;
             Page page=_list[_queueList[actualState].getNr()];
