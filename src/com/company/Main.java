@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -18,6 +19,8 @@ public class Main {
         System.out.println("Equal: "+ planner.equal());
         System.out.println("Proportional: "+ planner.proportional());
         System.out.println("Site Faults: "+ planner.pageFault());
+        System.out.println("Working Set Model: "+ planner.workingSetModel());
+
 
     }
 }

@@ -13,7 +13,11 @@ public class Pager {
         Random rand=new Random();
         if(range>0 && size>0){
             for(int i=0;i<size;i++) {
-                pagesQueue[i]=new Page(begin+rand.nextInt(range + 1));
+                double average = rand.nextDouble();
+                float gauss = (float)(Math.abs(rand.nextGaussian()));
+                if (gauss>range)
+                    gauss=range;
+                pagesQueue[i]=new Page(begin+Math.round(gauss));
             }
             for(int k=0;k<range+1+begin;k++)
                 pages[k]=new Page(k);

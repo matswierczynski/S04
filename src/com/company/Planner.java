@@ -79,6 +79,21 @@ public class Planner {
         return siteError;
     }
 
+    public int workingSetModel(){
+        Process proc [] = new Process [10];
+        for(int i=0;i<proc.length;i++)
+            proc[i] = new Process(processes.getProc()[i]); //kopia procesów
+        int siteError=0;
+        while (!isDone(proc)) { //wykonanie procesów do końca
+            for (int i = 0; i < proc.length; i++) {
+                siteError += proc[i].handle();
+                proc[i].setFrames(proc[i].getTs());
+            }
+        }
+        return siteError;
+    }
+
+    /* Wyszukiwanie procesu o min i max częstości błędów strony*/
     private void manageFrames(int [] siteFaults, Process [] proc){
         int [] toSort = new int[siteFaults.length];
         System.arraycopy(siteFaults,0,toSort,0,siteFaults.length);
@@ -108,6 +123,9 @@ public class Planner {
 
     }
 
+
+
+    /*Sprawdzanie czy wszystkie odwołania procesu zostały obsłużone */
     public boolean isDone(Process [] array){
         int done=0;
         for (int i=0;i<array.length;i++) {
